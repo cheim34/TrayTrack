@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { LoanDirection, LoanStatus, LocationType, TrayCondition, TrayStatus } from "@prisma/client";
+import { LoanDirection, LoanStatus, LocationType, TrayCondition, TrayStatus } from "@/generated/prisma/client";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";

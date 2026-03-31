@@ -1,13 +1,12 @@
-const {
-  PrismaClient,
+import {
+  LoanDirection,
+  LoanStatus,
   LocationType,
   TrayCondition,
   TrayStatus,
-  LoanDirection,
-  LoanStatus,
-} = require("@prisma/client");
+} from "../generated/prisma/client.ts";
 
-const prisma = new PrismaClient();
+import { prisma } from "../lib/prisma";
 
 async function main() {
   await prisma.loanEvent.deleteMany();
