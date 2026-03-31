@@ -1,8 +1,7 @@
 const path = require("path");
 const Database = require("better-sqlite3");
 
-function createDb(dbPath = path.join(__dirname, "..", "data", "traytrack.db")) {
-  const db = new Database(dbPath);
+function initSchema(db) {
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
 
@@ -101,10 +100,15 @@ function createDb(dbPath = path.join(__dirname, "..", "data", "traytrack.db")) {
     CREATE INDEX IF NOT EXISTS idx_transfers_tray ON transfers (tray_id);
     CREATE INDEX IF NOT EXISTS idx_scan_events_tray ON scan_events (tray_id);
   `);
+}
 
+function createDb(dbPath = path.join(__dirname, "..", "data", "traytrack.db")) {
+  const db = new Database(dbPath);
+  initSchema(db);
   return db;
 }
 
 module.exports = {
   createDb,
+  initSchema,
 };

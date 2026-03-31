@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
 const { randomUUID } = require("crypto");
-const { createDb } = require("./db");
+const { createDb, initSchema } = require("./db");
 
 function nowIso() {
   return new Date().toISOString();
@@ -21,6 +21,9 @@ function parseLikelySerial(rawValue) {
 
 function createApp(options = {}) {
   const db = options.db || createDb();
+  if (options.db) {
+    initSchema(db);
+  }
   const app = express();
 
   app.use(express.json({ limit: "2mb" }));

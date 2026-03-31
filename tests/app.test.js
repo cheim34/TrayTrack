@@ -10,7 +10,7 @@ function buildApp() {
 }
 
 test("parseLikelySerial parses normalized serial", () => {
-  assert.equal(parseLikelySerial("Serial: ab-1234 "), "SERIAL:AB-1234".match(/[A-Z0-9-]{4,}/g)[0]);
+  assert.equal(parseLikelySerial("Serial: ab-1234 "), "AB-1234");
 });
 
 test("user, territory, location, tray transfer workflow works", async () => {
