@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrayTrack</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>TrayTrack</h1>
+      <p>Collaborative instrument tray tracking for medical device territories.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>1) Team setup</h2>
+        <div class="grid-two">
+          <div>
+            <label for="userSelect">Active user</label>
+            <select id="userSelect"></select>
+            <p class="muted">All actions are tracked using this acting user.</p>
+          </div>
+          <form id="createUserForm">
+            <h3>Create user</h3>
+            <label for="newUserName">Name</label>
+            <input id="newUserName" required />
+            <label for="newUserEmail">Email</label>
+            <input id="newUserEmail" type="email" required />
+            <button type="submit">Create user</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>2) Territory setup</h2>
+        <div class="grid-two">
+          <div>
+            <label for="territorySelect">Active territory</label>
+            <select id="territorySelect"></select>
+            <p class="muted">Only territories where active user is a member are listed.</p>
+          </div>
+          <form id="createTerritoryForm">
+            <h3>Create territory</h3>
+            <label for="newTerritoryName">Territory name</label>
+            <input id="newTerritoryName" required />
+            <label for="newTerritoryState">State/Region</label>
+            <input id="newTerritoryState" placeholder="CA/NV" />
+            <button type="submit">Create territory</button>
+          </form>
+        </div>
+        <div class="member-row">
+          <form id="addMemberForm">
+            <h3>Add collaborator to active territory</h3>
+            <label for="memberUserId">User</label>
+            <select id="memberUserId"></select>
+            <label for="memberRole">Role</label>
+            <select id="memberRole">
+              <option value="member">member</option>
+              <option value="admin">admin</option>
+              <option value="owner">owner</option>
+            </select>
+            <button type="submit">Add member</button>
+          </form>
+          <div>
+            <h3>Territory members</h3>
+            <ul id="memberList" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>3) Territory dashboard</h2>
+        <div id="summaryCards" class="summary-grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>4) Locations</h2>
+        <div class="grid-two">
+          <form id="createLocationForm">
+            <h3>Create location</h3>
+            <label for="locationName">Name</label>
+            <input id="locationName" required />
+            <label for="locationAddress">Address</label>
+            <input id="locationAddress" />
+            <label for="locationNotes">Notes</label>
+            <textarea id="locationNotes"></textarea>
+            <button type="submit">Create location</button>
+          </form>
+          <div>
+            <h3>Locations (edit inline)</h3>
+            <ul id="locationList" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>5) Trays</h2>
+        <div class="grid-two">
+          <form id="createTrayForm">
+            <h3>Create tray</h3>
+            <label for="trayName">Tray name</label>
+            <input id="trayName" required />
+            <label for="traySerial">Serial code</label>
+            <input id="traySerial" placeholder="KS-A-9001" />
+            <label for="trayOwnerTerritory">Owner territory</label>
+            <select id="trayOwnerTerritory"></select>
+            <label for="trayCurrentTerritory">Current territory</label>
+            <select id="trayCurrentTerritory"></select>
+            <label for="trayCurrentLocation">Current location (optional)</label>
+            <select id="trayCurrentLocation"></select>
+            <label for="trayStatus">Status</label>
+            <select id="trayStatus">
+              <option value="available">available</option>
+              <option value="in_use">in_use</option>
+              <option value="maintenance">maintenance</option>
+            </select>
+            <label class="checkbox">
+              <input id="trayIsLoaner" type="checkbox" />
+              Is loaner tray
+            </label>
+            <label for="trayNotes">Notes</label>
+            <textarea id="trayNotes"></textarea>
+            <button type="submit">Create tray</button>
+          </form>
+          <div>
+            <h3>Trays (edit inline)</h3>
+            <ul id="trayList" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>6) Assign and transfer trays</h2>
+        <div class="grid-two">
+          <form id="assignLocationForm">
+            <h3>Assign tray to location (same territory)</h3>
+            <label for="assignTrayId">Tray</label>
+            <select id="assignTrayId"></select>
+            <label for="assignLocationId">Location</label>
+            <select id="assignLocationId"></select>
+            <label for="assignNotes">Notes</label>
+            <input id="assignNotes" />
+            <button type="submit">Assign</button>
+          </form>
+          <form id="transferTrayForm">
+            <h3>Transfer tray to another territory</h3>
+            <label for="transferTrayId">Tray</label>
+            <select id="transferTrayId"></select>
+            <label for="transferToTerritoryId">To territory</label>
+            <select id="transferToTerritoryId"></select>
+            <label for="transferToLocationId">To location (optional)</label>
+            <input id="transferToLocationId" placeholder="Paste location ID if known" />
+            <label for="transferNotes">Notes</label>
+            <input id="transferNotes" placeholder="Loan to neighboring rep" />
+            <button type="submit">Transfer</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>7) Loaner tracking</h2>
+        <div class="toolbar">
+          <label for="loanerScope">Scope</label>
+          <select id="loanerScope">
+            <option value="all">all</option>
+            <option value="owned">owned by this territory</option>
+            <option value="borrowed">borrowed in this territory</option>
+          </select>
+          <button id="refreshLoanersButton" type="button">Refresh</button>
+        </div>
+        <ul id="loanerList" class="list"></ul>
+      </section>
+
+      <section class="card">
+        <h2>8) Camera scanning (QR / barcode / text serial)</h2>
+        <p class="muted">
+          Supports native BarcodeDetector when available, with fallback to jsQR and Quagga.
+          Text mode uses OCR via Tesseract.js.
+        </p>
+        <div class="scan-controls">
+          <label for="scanMode">Mode</label>
+          <select id="scanMode">
+            <option value="qr">QR</option>
+            <option value="barcode">Barcode</option>
+            <option value="text">Text serial (OCR)</option>
+          </select>
+          <button type="button" id="startCameraButton">Start camera</button>
+          <button type="button" id="stopCameraButton">Stop camera</button>
+          <button type="button" id="captureScanButton">Capture now</button>
+        </div>
+        <div class="video-wrap">
+          <video id="cameraFeed" playsinline muted></video>
+          <canvas id="scanCanvas"></canvas>
+        </div>
+        <form id="scanEventForm">
+          <label for="scanRawValue">Detected value</label>
+          <input id="scanRawValue" required />
+          <label class="checkbox">
+            <input id="autoSubmitScan" type="checkbox" checked />
+            Auto-submit scan events when detection succeeds
+          </label>
+          <button type="submit">Save scan event</button>
+        </form>
+        <h3>Recent scans</h3>
+        <ul id="scanList" class="list"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Transfer history</h2>
+        <ul id="transferList" class="list"></ul>
+      </section>
+
+      <p id="statusMessage" class="status"></p>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
