@@ -1,0 +1,52 @@
+{
+  "name": "traytrack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Collaborative tray management for medical device territories",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "db:push": "prisma db push",
+    "db:seed": "node prisma/seed.js",
+    "postinstall": "prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cheim34/TrayTrack.git"
+  },
+  "keywords": [
+    "medical-device",
+    "inventory",
+    "territory-management",
+    "tray-tracking"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cheim34/TrayTrack/issues"
+  },
+  "homepage": "https://github.com/cheim34/TrayTrack#readme",
+  "dependencies": {
+    "@prisma/client": "^7.6.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^1.7.0",
+    "next": "^16.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tesseract.js": "^7.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
+    "prisma": "^7.6.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2"
+  }
+}

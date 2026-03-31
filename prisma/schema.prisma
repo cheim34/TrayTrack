@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum LocationType {
+  HOSPITAL
+  ASC
+  REP_HOME
+  WAREHOUSE
+  STERILE_PROCESSING
+  IN_TRANSIT
+  OTHER
+}
+
+enum TrayStatus {
+  AVAILABLE
+  AT_CASE
+  CLEANING
+  LOANED_OUT
+  BORROWED_IN
+  MAINTENANCE
+  LOST
+}
+
+enum TrayCondition {
+  READY
+  MISSING_ITEMS
+  IN_REPAIR
+  QUARANTINED
+}
+
+enum LoanDirection {
+  INTERNAL
+  EXTERNAL_IN
+  EXTERNAL_OUT
+}
+
+enum LoanStatus {
+  ACTIVE
+  RETURNED
+  OVERDUE
+}
+
+model Territory {
+  id            String         @id @default(cuid())
+  name          String
+  region        String
+  coverage      String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  collaborators Collaborator[]
+  locations     Location[]
+  trays         Tray[]
+  transfers     TransferEvent[]
+  loans         LoanEvent[]
+}
+
+model Collaborator {
+  id          String    @id @default(cuid())
+  territoryId String
+  name        String
+  email       String
+  role        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  territory   Territory @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+
+  @@unique([territoryId, email])
+}
+
+model Location {
+  id                String          @id @default(cuid())
+  territoryId       String
+  name              String
+  city              String
+  state             String
+  type              LocationType
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  territory         Territory       @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+  trays             Tray[]
+  outgoingTransfers TransferEvent[] @relation("FromLocationTransfers")
+  incomingTransfers TransferEvent[] @relation("ToLocationTransfers")
+}
+
+model Tray {
+  id         String         @id @default(cuid())
+  territoryId String
+  locationId String?
+  name       String
+  trayCode   String
+  serialCode String?
+  barcode    String?
+  qrCode     String?
+  status     TrayStatus     @default(AVAILABLE)
+  condition  TrayCondition  @default(READY)
+  isLoaner   Boolean        @default(false)
+  notes      String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  territory  Territory      @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+  location   Location?      @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  transfers  TransferEvent[]
+  loan       LoanEvent?
+
+  @@unique([territoryId, trayCode])
+}
+
+model TransferEvent {
+  id             String    @id @default(cuid())
+  territoryId    String
+  trayId         String
+  fromLocationId String?
+  toLocationId   String
+  note           String?
+  createdAt      DateTime  @default(now())
+  territory      Territory @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+  tray           Tray      @relation(fields: [trayId], references: [id], onDelete: Cascade)
+  fromLocation   Location? @relation("FromLocationTransfers", fields: [fromLocationId], references: [id], onDelete: SetNull)
+  toLocation     Location  @relation("ToLocationTransfers", fields: [toLocationId], references: [id], onDelete: Cascade)
+}
+
+model LoanEvent {
+  id               String        @id @default(cuid())
+  territoryId      String
+  trayId           String        @unique
+  direction        LoanDirection
+  status           LoanStatus    @default(ACTIVE)
+  partnerName      String
+  partnerTerritory String?
+  startDate        DateTime
+  dueDate          DateTime?
+  notes            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  territory        Territory     @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+  tray             Tray          @relation(fields: [trayId], references: [id], onDelete: Cascade)
+}
